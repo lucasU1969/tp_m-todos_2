@@ -117,43 +117,82 @@ def similarity_matrix(matriz, sigma):
 
 # Ploteo de las matrices de similaridad para distintos valores de k y sigma
 
-# uso matrices reducidas a 2 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
-sigma_values = [0.01, 0.1, 1, 10]
-k = 2
-fig, axs = plt.subplots(1, 4, figsize=(20, 5))
-for i, sigma in enumerate(sigma_values):
-    s = similarity_matrix(matriz_reducida_2, sigma)
-    axs[i].imshow(s, cmap='viridis', aspect='auto')
-    axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
-    axs[i].set_xlabel('Columnas')
-    axs[i].set_ylabel('Filas')
+# # uso matrices reducidas a 2 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
+# sigma_values = [0.01, 0.1, 1, 10]
+# k = 2
+# fig, axs = plt.subplots(1, 4, figsize=(20, 5))
+# for i, sigma in enumerate(sigma_values):
+#     s = similarity_matrix(matriz_reducida_2, sigma)
+#     axs[i].imshow(s, cmap='viridis', aspect='auto')
+#     axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
+#     axs[i].set_xlabel('Columnas')
+#     axs[i].set_ylabel('Filas')
+# plt.show()
+
+# # uso matrices reducidas a 6 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
+
+
+# fig, axs = plt.subplots(1, 4, figsize=(20, 5))
+# for i, sigma in enumerate(sigma_values):
+#     s = similarity_matrix(matriz_reducida_6, sigma)
+#     axs[i].imshow(s, cmap='viridis', aspect='auto')
+#     axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
+#     axs[i].set_xlabel('Columnas')
+#     axs[i].set_ylabel('Filas')
+# plt.show()
+
+# # uso matrices reducidas a 10 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
+
+# fig, axs = plt.subplots(1, 4, figsize=(20, 5))
+# for i, sigma in enumerate(sigma_values):
+#     s = similarity_matrix(matriz_reducida_10, sigma)
+#     axs[i].imshow(s, cmap='viridis', aspect='auto')
+#     axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
+#     axs[i].set_xlabel('Columnas')
+#     axs[i].set_ylabel('Filas')
+# plt.show()
+
+
+# matriz centrada: 
+
+def center_matrix(matriz):
+    media_columnas = np.mean(matriz, axis=0, keepdims=True)
+    matriz_cent = matriz - media_columnas
+    return matriz_cent
+
+
+# ploteo de la matriz centrada
+
+matriz_cent = center_matrix(matriz)
+plt.imshow(matriz_cent, cmap='viridis', aspect='auto')
+plt.colorbar()  # Añadir una barra de color para mostrar el gradiente
+plt.title('Matriz centrada')
+plt.xlabel('Columnas')
+plt.ylabel('Filas')
 plt.show()
 
-# uso matrices reducidas a 6 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
+s_cent, u_cent, v_T_cent = np.linalg.svd(matriz_cent)
 
+# ploteo las matrices en un mismo subplot
 
-fig, axs = plt.subplots(1, 4, figsize=(20, 5))
-for i, sigma in enumerate(sigma_values):
-    s = similarity_matrix(matriz_reducida_6, sigma)
-    axs[i].imshow(s, cmap='viridis', aspect='auto')
-    axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
-    axs[i].set_xlabel('Columnas')
-    axs[i].set_ylabel('Filas')
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+axs[0].imshow(u_cent, cmap='viridis', aspect='auto')
+axs[0].set_title('Matriz U centrada')
+axs[0].set_xlabel('Columnas')
+axs[0].set_ylabel('Filas')
+
+axs[1].imshow(np.diag(s_cent), cmap='viridis', aspect='auto')
+axs[1].set_title('Matriz Sigma centrada')
+axs[1].set_xlabel('Columnas')
+axs[1].set_ylabel('Filas')
+
+axs[2].imshow(v_T_cent, cmap='viridis', aspect='auto')
+axs[2].set_title('Matriz V_T centrada')
+axs[2].set_xlabel('Columnas')
+axs[2].set_ylabel('Filas')
+
 plt.show()
-
-# uso matrices reducidas a 10 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
-
-fig, axs = plt.subplots(1, 4, figsize=(20, 5))
-for i, sigma in enumerate(sigma_values):
-    s = similarity_matrix(matriz_reducida_10, sigma)
-    axs[i].imshow(s, cmap='viridis', aspect='auto')
-    axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
-    axs[i].set_xlabel('Columnas')
-    axs[i].set_ylabel('Filas')
-plt.show()
-
-
-
 
 
 
