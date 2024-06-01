@@ -133,14 +133,14 @@ def pca_svd(X, n_components):
     X_centered = X - X_mean
 
     U, S, Vt = np.linalg.svd(X_centered, full_matrices=False)
+    
+    U_matrix = U[:, :n_components]
+    S_matrix = np.diag(S[:n_components])
+    Vt_matrix = Vt[:n_components, :]
 
-    principal_components = Vt[:n_components, :]
-
-    X_reduced = np.dot(X_centered, principal_components.T)
-
-    X_reconstructed = np.dot(X_reduced, principal_components) + X_mean
-
-    return X_reduced, X_reconstructed, principal_components
+    X_reconstructed = np.dot(U_matrix, np.dot(S_matrix, Vt_matrix)) + X_mean
+    
+    return X_reconstructed, Vt_matrix
 
 def show_images_multiple_reconstructions(original_images, reconstructed_images_list, image_shape, components_list):
     num_images = len(original_images)
@@ -163,54 +163,16 @@ def show_images_multiple_reconstructions(original_images, reconstructed_images_l
     
     plt.show()
 
-def show_eigenvectors(Vt, image_shape):
-    num_components = Vt.shape[0]
-    plt.figure(figsize=(15, 5))
-    for i in range(num_components):
-        plt.subplot(1, num_components, i + 1)
-        plt.imshow(Vt[i].reshape(image_shape), cmap='gray')
-        plt.title(f'Vector {i + 1}')
-        plt.axis('off')
-    plt.show()
-
-def calculate_mse(original_images, reconstructed_images):
-    mse = np.mean((original_images - reconstructed_images) ** 2)
-    return mse
-
-def plot_similarity_matrices_separately(original_images, reconstructed_images_list, components_list):
-    for i, reconstructed_images in enumerate(reconstructed_images_list):
-        similarity_matrix = cosine_similarity(reconstructed_images)
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(similarity_matrix, cmap='viridis')
-        plt.title(f'Similarity Matrix d={components_list[i]}')
-        plt.axis('off')
-        plt.show()
-
 images = load_images_from_folder('datasets_imgs')
 images_matrix = np.array(images)
 
 components_list = [19, 15, 10, 6, 2]
 reconstructed_images_list = []
-mse_list = []
 
 for n_components in components_list:
-    _, images_reconstructed, _ = pca_svd(images_matrix, n_components)
+    images_reconstructed, _ = pca_svd(images_matrix, n_components)
     reconstructed_images_list.append(images_reconstructed)
-    mse = calculate_mse(images_matrix, images_reconstructed)
-    mse_list.append(mse)
 
 image_shape = (28, 28)
 
 show_images_multiple_reconstructions(images_matrix, reconstructed_images_list, image_shape, components_list)
-
-# Graficar el MSE en función del número de componentes principales
-plt.figure(figsize=(10, 6))
-plt.plot(components_list, mse_list, marker='o')
-plt.xlabel('Número de Componentes Principales (d)')
-plt.ylabel('Error Cuadrático Medio (MSE)')
-plt.title('MSE vs. Número de Componentes Principales')
-plt.grid(True)
-plt.show()
-
-# Graficar las matrices de similitud por separado
-plot_similarity_matrices_separately(images_matrix, reconstructed_images_list, components_list)
