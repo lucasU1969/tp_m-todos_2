@@ -11,9 +11,6 @@ df = df.iloc[1:, 1:]
 # Convertir el DataFrame a una matriz de NumPy
 matriz = df.values
 
-# print(matriz)
-
-# Plotear la matriz
 plt.imshow(matriz, cmap='viridis', aspect='auto')
 plt.colorbar()  # Añadir una barra de color para mostrar el gradiente
 plt.title('Matriz representada como una grilla')
@@ -54,56 +51,12 @@ plt.ylabel('Valor')
 plt.show()
 
 
-# reduccion de la dimensionalidad de la matriz
-
-k = 2
-v_k_T = v_T[:k, :]
-s_k = np.diag(s)[:k, :k]
-u_k = u[:, :k]
-
-matriz_reducida_2 = u_k @ s_k @ v_k_T
-
-k = 6
-v_k_T = v_T[:k, :]
-s_k = np.diag(s)[:k, :k]
-u_k = u[:, :k]
-
-matriz_reducida_6 = u_k @ s_k @ v_k_T
-
-k = 10 
-v_k_T = v_T[:k, :]
-s_k = np.diag(s)[:k, :k]
-u_k = u[:, :k]
-
-matriz_reducida_10 = u_k @ s_k @ v_k_T
-
-# ploteo las matrices en un mismo subplot
-
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-axs[0].imshow(matriz_reducida_2, cmap='viridis', aspect='auto')
-axs[0].set_title('Matriz reducida a 2 dimensiones')
-axs[0].set_xlabel('Columnas')
-axs[0].set_ylabel('Filas')
-
-axs[1].imshow(matriz_reducida_6, cmap='viridis', aspect='auto')
-axs[1].set_title('Matriz reducida a 6 dimensiones')
-axs[1].set_xlabel('Columnas')
-axs[1].set_ylabel('Filas')
-
-axs[2].imshow(matriz_reducida_10, cmap='viridis', aspect='auto')
-axs[2].set_title('Matriz reducida a 10 dimensiones')
-axs[2].set_xlabel('Columnas')
-axs[2].set_ylabel('Filas')
-
-plt.show()
-
 
 
 # Ploteo de las matrices de similaridad para distintos valores de k y sigma
 
 def euclinean_distance(xi, xj, sigma):
-    return np.exp(-np.linalg.norm(xi - xj) / (2 * sigma ** 2))
+    return np.exp(-np.linalg.norm(xi - xj)**2 / (2 * sigma ** 2))
 
 
 def similarity_matrix(matriz, sigma):
@@ -113,44 +66,6 @@ def similarity_matrix(matriz, sigma):
         for j in range(n):
             s[i, j] = euclinean_distance(matriz[i, :], matriz[j, :], sigma)
     return s
-
-
-# # Ploteo de las matrices de similaridad para distintos valores de k y sigma
-
-# # uso matrices reducidas a 2 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
-# sigma_values = [0.01, 0.1, 1, 10]
-# k = 2
-# fig, axs = plt.subplots(1, 4, figsize=(20, 5))
-# for i, sigma in enumerate(sigma_values):
-#     s = similarity_matrix(matriz_reducida_2, sigma)
-#     axs[i].imshow(s, cmap='viridis', aspect='auto')
-#     axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
-#     axs[i].set_xlabel('Columnas')
-#     axs[i].set_ylabel('Filas')
-# plt.show()
-
-# # uso matrices reducidas a 6 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
-
-
-# fig, axs = plt.subplots(1, 4, figsize=(20, 5))
-# for i, sigma in enumerate(sigma_values):
-#     s = similarity_matrix(matriz_reducida_6, sigma)
-#     axs[i].imshow(s, cmap='viridis', aspect='auto')
-#     axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
-#     axs[i].set_xlabel('Columnas')
-#     axs[i].set_ylabel('Filas')
-# plt.show()
-
-# # uso matrices reducidas a 10 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
-
-# fig, axs = plt.subplots(1, 4, figsize=(20, 5))
-# for i, sigma in enumerate(sigma_values):
-#     s = similarity_matrix(matriz_reducida_10, sigma)
-#     axs[i].imshow(s, cmap='viridis', aspect='auto')
-#     axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
-#     axs[i].set_xlabel('Columnas')
-#     axs[i].set_ylabel('Filas')
-# plt.show()
 
 
 # matriz centrada: 
@@ -230,17 +145,17 @@ axs[0].set_title('Matriz original')
 axs[0].set_xlabel('Columnas')
 axs[0].set_ylabel('Filas')
 
-axs[1].imshow(matriz_reducida_2, cmap='viridis', aspect='auto')
+axs[1].imshow(matriz_reducida_cent_2, cmap='viridis', aspect='auto')
 axs[1].set_title('Matriz reducida a 2 dimensiones')
 axs[1].set_xlabel('Columnas')
 axs[1].set_ylabel('Filas')
 
-axs[2].imshow(matriz_reducida_6, cmap='viridis', aspect='auto')
+axs[2].imshow(matriz_reducida_cent_6, cmap='viridis', aspect='auto')
 axs[2].set_title('Matriz reducida a 6 dimensiones')
 axs[2].set_xlabel('Columnas')
 axs[2].set_ylabel('Filas')
 
-axs[3].imshow(matriz_reducida_10, cmap='viridis', aspect='auto')
+axs[3].imshow(matriz_reducida_cent_10, cmap='viridis', aspect='auto')
 axs[3].set_title('Matriz reducida a 10 dimensiones')
 axs[3].set_xlabel('Columnas')
 axs[3].set_ylabel('Filas')
@@ -258,10 +173,11 @@ v_cent_6 = v_T_cent[:6, :].T
 v_cent_10 = v_T_cent[:10, :].T
 
 
-Z_cent_2 = matriz_reducida_2 @ v_cent_2
-Z_cent_6 = matriz_reducida_6 @ v_cent_6
-Z_cent_10 = matriz_reducida_10 @ v_cent_10
+Z_cent_2 = matriz_reducida_cent_2 @ v_cent_2
+Z_cent_6 = matriz_reducida_cent_6 @ v_cent_6
+Z_cent_10 = matriz_reducida_cent_10 @ v_cent_10
 
+Z_cent_2  = u_cent_2 @ sigma_cent_2
 
 # axs[0].imshow(matriz, cmap='viridis', aspect='auto')
 # axs[0].set_title('Matriz original')
@@ -286,7 +202,7 @@ Z_cent_10 = matriz_reducida_10 @ v_cent_10
 # plt.show()
 
 
-# # ahora hay que plotear las matrices de similaridad para distintos valores de k y sigma
+# # # ahora hay que plotear las matrices de similaridad para distintos valores de k y sigma
 
 # uso matrices reducidas a 2 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
 sigma_values = [0.01, 0.1, 1, 10]
@@ -381,3 +297,126 @@ plt.show()
 # PCA(matriz, 2)
 # PCA(matriz, 6)
 # PCA(matriz, 10)
+
+
+# ahora tengo que plotear los vectores propios asociados a las k primeras componentes principales con cada coordenada como una barra en un gráfico de barras
+# saco los vectores propios de la matriz V_T, matriz en la que los vectores están dispuestos como filas
+# gráfico de barras de la primera fila de V_T y la segunda fila de V_T
+# Ploteo de los vectores propios en subplots
+fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+axs[0].bar(range(len(v_T_cent_2[0, :])), v_T_cent_2[0, :], color='green')
+axs[0].set_title('Primer vector propio')
+axs[0].set_xlabel('Componente')
+axs[0].set_ylabel('Valor')
+axs[1].bar(range(len(v_T_cent_2[1, :])), v_T_cent_2[1, :], color='green')
+axs[1].set_title('Segundo vector propio')
+axs[1].set_xlabel('Componente')
+axs[1].set_ylabel('Valor')
+plt.show()
+
+# ploteo los datos recortados luego de multiplicar por la v recortada con d = 2
+
+# posibes cmap = 'viridis', 'plasma', 'inferno', 'magma', 'cividis'
+
+
+
+def plot_2d_colormap(matrix):
+    """
+    Grafica cada observación en una matriz de tamaño n x 2 en el plano 2D con un colormap.
+
+    Parámetros:
+    matrix (np.ndarray): Matriz de tamaño n x 2 donde n son el número de observaciones y 2 son las features.
+    """
+    # Comprobar si la matriz tiene las dimensiones correctas
+    if matrix.shape[1] != 2:
+        raise ValueError("La matriz debe tener exactamente 2 columnas (features)")
+
+    # Crear un colormap basado en el número de observaciones
+    n_observations = matrix.shape[0]
+    colors = np.linspace(0, 1, n_observations)
+
+    # Crear la figura y el eje
+    plt.figure(figsize=(10, 8))
+    scatter = plt.scatter(matrix[:, 0], matrix[:, 1], c=colors, cmap='viridis', s=50, alpha=0.7, edgecolor='k')
+
+    # Añadir la barra de color
+    plt.colorbar(scatter, label='Observación index')
+
+    # Etiquetas y título
+    plt.xlabel('Feature 1')
+    plt.ylabel('Feature 2')
+    plt.title('Mediciones en R2 con Colormap')
+    plt.grid(True)
+
+    # Mostrar la gráfica
+    plt.show()
+
+
+plot_2d_colormap(Z_cent_2)
+
+# plt.scatter(Z_cent_2[:, 0], Z_cent_2[:, 1],color='red' ,cmap='viridis')
+# plt.title('Datos recortados con d = 2')
+# plt.xlabel('Componente 1')
+# plt.ylabel('Componente 2')
+# plt.show()
+
+
+#calcular la norma de Frobenius entre las matrices de similaridad de la matriz original y la matriz reducida a 2 dimensiones
+
+def frobenius_norm(matrix1, matrix2):
+    """
+    Calcula la norma de Frobenius entre dos matrices.
+
+    Parámetros:
+    matrix1 (np.ndarray): Primera matriz.
+    matrix2 (np.ndarray): Segunda matriz.
+
+    Retorna:
+    float: Norma de Frobenius entre las dos matrices.
+    """
+    return np.linalg.norm(matrix1 - matrix2, ord='fro')
+
+
+# # Calcular las matrices de similaridad
+# s_original = similarity_matrix(matriz, 1)
+# s_reducida = similarity_matrix(Z_cent_2, 1)
+
+# # Calcular la norma de Frobenius
+# frobenius = frobenius_norm(s_original, s_reducida)
+# print(f'(d = 2) La norma de Frobenius entre las matrices de similaridad es: {frobenius}')
+
+# #calcular la norma de Frobenius entre las matrices de similaridad de la matriz original y la matriz reducida a 6 dimensiones
+
+# # Calcular las matrices de similaridad
+# s_original = similarity_matrix(matriz, 1)
+# s_reducida = similarity_matrix(Z_cent_6, 1)
+
+# # Calcular la norma de Frobenius
+# frobenius = frobenius_norm(s_original, s_reducida)
+# print(f'(d = 6) La norma de Frobenius entre las matrices de similaridad es: {frobenius}')
+
+# #calcular la norma de Frobenius entre las matrices de similaridad de la matriz original y la matriz reducida a 10 dimensiones
+
+# # Calcular las matrices de similaridad
+# s_original = similarity_matrix(matriz, 1)
+# s_reducida = similarity_matrix(Z_cent_10, 1)
+
+# # Calcular la norma de Frobenius
+# frobenius = frobenius_norm(s_original, s_reducida)
+# print(f'(d = 10) La norma de Frobenius entre las matrices de similaridad es: {frobenius}')
+
+
+
+# ahora voy a calcular la norma de frobenius entre la matriz original y las matrices reducidas
+
+# Calcular la norma de Frobenius entre la matriz original y la matriz reducida a 2 dimensiones
+frobenius = frobenius_norm(matriz, matriz_reducida_cent_2)
+print(f'(d = 2) La norma de Frobenius entre las matrices es: {frobenius}')
+
+# Calcular la norma de Frobenius entre la matriz original y la matriz reducida a 6 dimensiones
+frobenius = frobenius_norm(matriz, matriz_reducida_cent_6)
+print(f'(d = 6) La norma de Frobenius entre las matrices es: {frobenius}')
+
+# Calcular la norma de Frobenius entre la matriz original y la matriz reducida a 10 dimensiones
+frobenius = frobenius_norm(matriz, matriz_reducida_cent_10)
+print(f'(d = 10) La norma de Frobenius entre las matrices es: {frobenius}')
