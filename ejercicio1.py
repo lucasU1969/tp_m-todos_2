@@ -215,7 +215,6 @@ for i, sigma in enumerate(sigma_values):
     axs[i].set_title(f'Matriz de similaridad con sigma = {sigma}')
     axs[i].set_xlabel('Columnas')
     axs[i].set_ylabel('Filas')
-plt.title('Matriz de similaridad con sigma = 0.01, 0.1, 1, 10 y d = 2')
 plt.show()
 
 # uso matrices reducidas a 6 dimensiones para sigma igual a 0.01, 0.1, 1, 10 en un mismo subplot
